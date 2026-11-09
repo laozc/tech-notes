@@ -1,0 +1,96 @@
+{
+  "script": {
+    "tested_on": "2026-11-05",
+    "environment": "Linux Docker; locally cached images and existing hash-verified tiny model",
+    "actions": [
+      "up",
+      "check",
+      "down"
+    ],
+    "outcome": "All three actions succeeded; completion through Envoy and EPP returned HTTP 200",
+    "model": "llama-demo",
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 5,
+      "total_tokens": 21,
+      "prompt_tokens_details": {
+        "cached_tokens": 4
+      }
+    },
+    "images": [
+      "/tech-notes-llmd-envoy envoyproxy/envoy:distroless-v1.33.2 sha256:3855673506f2c707afffb48a7de12a799df07c60ee9c0d5abb4fb68fc304e1a1",
+      "/tech-notes-llmd-epp ghcr.io/llm-d/llm-d-router-endpoint-picker:main sha256:f83b0d11dff1205fbd106ffb3945e24a9228e52cd5357f87d9c0edf21a57c8a8",
+      "/tech-notes-llmd-model ghcr.io/ggml-org/llama.cpp:server sha256:e8ab49971f62e2e3a915ef1488bb349255ffc1767df76bbef0ba078bdfbd42bf"
+    ],
+    "limitations": [
+      "Download through the mirror was not repeated during this script test.",
+      "Native Windows and Podman were not tested.",
+      "A single backend cannot establish queue-based balancing."
+    ]
+  },
+  "kind": {
+    "test_time_utc": "2026-11-05T14:28:45Z",
+    "route": "kind Envoy -> EPP -> llama-server",
+    "health_status": 200,
+    "advertised_models": [
+      "llmd-demo"
+    ],
+    "request_count": 2,
+    "request_parameters": {
+      "model": "llmd-demo",
+      "max_tokens": 32,
+      "stream": false
+    },
+    "responses": [
+      {
+        "request": 0,
+        "status": 200,
+        "model": "llmd-demo",
+        "finish_reason": "length",
+        "usage": {
+          "completion_tokens": 32,
+          "prompt_tokens": 57,
+          "total_tokens": 89,
+          "prompt_tokens_details": {
+            "cached_tokens": 15
+          }
+        }
+      },
+      {
+        "request": 1,
+        "status": 200,
+        "model": "llmd-demo",
+        "finish_reason": "length",
+        "usage": {
+          "completion_tokens": 32,
+          "prompt_tokens": 57,
+          "total_tokens": 89,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        }
+      }
+    ],
+    "peak_sampled_metrics": {
+      "server/llamacpp:requests_processing": 1.0,
+      "server/llamacpp:requests_deferred": 0,
+      "epp/llm_d_epp_average_running_requests": 0,
+      "epp/llm_d_epp_average_queue_size": 0
+    },
+    "limitations": "A sampled peak of zero does not prove the gauge never rose."
+  },
+  "windows": {
+    "http_status": 200,
+    "route": "Linux Envoy -> Linux EPP -> Windows llama-server",
+    "model_file": "Qwen3VL-8B-Instruct-Q4_K_M.gguf",
+    "finish_reason": "stop",
+    "usage": {
+      "completion_tokens": 3,
+      "prompt_tokens": 15,
+      "total_tokens": 18,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

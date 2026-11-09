@@ -1,0 +1,57 @@
+router:
+  monitoring:
+    prometheus:
+      auth:
+        enabled: false
+  inferencePool:
+    create: false
+  modelServers:
+    type: llamacpp
+    matchLabels:
+      app: llmd-llamacpp
+    targetPorts:
+      - number: 8000
+  epp:
+    image:
+      pullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    pluginsConfig:
+      apiVersion: llm-d.ai/v1
+      kind: EndpointPickerConfig
+      plugins:
+        - type: queue-scorer
+        - name: metrics-source
+          type: metrics-data-source
+        - name: metrics-extractor
+          type: core-metrics-extractor
+          parameters:
+            defaultEngine: llamacpp
+            engineConfigs:
+              - name: llamacpp
+                queuedRequestsSpec: "llamacpp:requests_deferred"
+                runningRequestsSpec: "llamacpp:requests_processing"
+      schedulingProfiles:
+        - name: default
+          plugins:
+            - pluginRef: queue-scorer
+      dataLayer:
+        injectDefaults: false
+        sources:
+          - pluginRef: metrics-source
+            extractors:
+              - pluginRef: metrics-extractor
+  proxy:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    presets:
+      envoy:
+        image: envoyproxy/envoy:distroless-v1.33.2

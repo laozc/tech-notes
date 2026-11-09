@@ -1,0 +1,16 @@
+{
+  "context_limit": {
+    "error": {
+      "code": 500,
+      "message": "Context size has been exceeded.",
+      "type": "server_error"
+    }
+  },
+  "metrics_disabled": {
+    "error": {
+      "code": 501,
+      "message": "This server does not support metrics endpoint. Start it with `--metrics`",
+      "type": "not_supported_error"
+    }
+  }
+}
