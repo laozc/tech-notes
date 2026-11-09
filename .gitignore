@@ -1,0 +1,29 @@
+# Models and generated binaries
+*.gguf
+*.safetensors
+*.bin
+*.exe
+*.dll
+*.tar
+*.tar.gz
+*.zip
+
+# Local state and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.kubeconfig
+auth.json
+hosts.yml
+
+# Build and editor output
+build/
+dist/
+.venv/
+__pycache__/
+.DS_Store
+
+# Script runtime data
+.local/
